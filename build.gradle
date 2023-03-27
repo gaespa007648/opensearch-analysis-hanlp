@@ -1,25 +1,26 @@
 buildscript {
     repositories {
+        gradlePluginPortal()
         mavenCentral()
         jcenter()
     }
     dependencies {
-        classpath "org.elasticsearch.gradle:build-tools:${elasticsearchVersion}"
+        classpath "org.opensearch.gradle:build-tools:${opensearchVersion}"
     }
 }
 
-group = 'org.elasticsearch'
-version = "$elasticsearchVersion"
-description = 'elasticsearch-analysis-hanlp'
+group = 'org.opensearch'
+version = "$opensearchVersion"
+description = 'opensearch-analysis-hanlp'
 
 apply plugin: 'java'
 apply plugin: 'idea'
-apply plugin: 'elasticsearch.esplugin'
+apply plugin: 'opensearch.opensearchplugin'
 
-esplugin {
+opensearchplugin {
     name 'analysis-hanlp'
-    description 'HanLP Analyzer for ElasticSearch'
-    classname 'org.elasticsearch.plugin.analysis.hanlp.AnalysisHanLPPlugin'
+    description 'HanLP Analyzer for Opensearch'
+    classname 'org.opensearch.plugin.analysis.hanlp.AnalysisHanLPPlugin'
     licenseFile = rootProject.file('LICENSE.txt')
     noticeFile = rootProject.file('NOTICE.txt')
 }
@@ -38,8 +39,8 @@ sourcesJar {
 
 assemble {
     doLast {
-        file("build/distributions/analysis-hanlp-${elasticsearchVersion}.zip").renameTo(file("build/distributions/${rootProject.name}-${elasticsearchVersion}.zip"))
-        ant.checksum file: "build/distributions/${rootProject.name}-${elasticsearchVersion}.zip"
+        file("build/distributions/analysis-hanlp-${opensearchVersion}.zip").renameTo(file("build/distributions/${rootProject.name}-${opensearchVersion}.zip"))
+        ant.checksum file: "build/distributions/${rootProject.name}-${opensearchVersion}.zip"
     }
 }
 
@@ -53,20 +54,20 @@ configurations.all() {
 }
 
 dependencies {
-    compile 'com.hankcs:hanlp:portable-1.7.8'
-    compile 'commons-codec:commons-codec:1.15'
-    compile 'commons-logging:commons-logging:1.2'
-    compile 'org.apache.httpcomponents:httpclient:4.5.13'
-    compile 'org.apache.httpcomponents:httpcore:4.4.14'
+    implementation 'com.hankcs:hanlp:portable-1.7.8'
+    implementation 'commons-codec:commons-codec:1.15'
+    implementation 'commons-logging:commons-logging:1.2'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'org.apache.httpcomponents:httpcore:4.4.14'
 }
 
-checkstyle {
-    sourceSets = [project.sourceSets.main]
-}
+// checkstyle {
+//     sourceSets = [project.sourceSets.main]
+// }
 
-checkstyleMain {
-    excludes = ['**/PorterStemmer.java']
-}
+// checkstyleMain {
+//     excludes = ['**/PorterStemmer.java']
+// }
 
 forbiddenApisMain {
     excludes = [
