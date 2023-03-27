@@ -1,84 +1,53 @@
-# elasticsearch-analysis-hanlp
-HanLP Analyzer for ElasticSearch
+# opensearch-analysis-hanlp
+HanLP Analyzer for Opensearch
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/dbe4103dc2da4b6b89b5562aacaa3c3f)](https://app.codacy.com/app/kennfalcon/elasticsearch-analysis-hanlp?utm_source=github.com&utm_medium=referral&utm_content=KennFalcon/elasticsearch-analysis-hanlp&utm_campaign=Badge_Grade_Settings)
-[![Build Status](https://travis-ci.com/KennFalcon/elasticsearch-analysis-hanlp.svg?branch=master)](https://travis-ci.com/KennFalcon/elasticsearch-analysis-hanlp)
-[![GitHub release](https://img.shields.io/github/release/KennFalcon/elasticsearch-analysis-hanlp.svg)](https://github.com/KennFalcon/elasticsearch-analysis-hanlp/releases)
+[![GitHub release](https://img.shields.io/github/release/Anytinz/opensearch-analysis-hanlp.svg)](https://github.com/Anytinz/opensearch-analysis-hanlp/releases)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+
+Forked from KennFalcon/elasticsearch-analysis-hanlp (https://github.com/KennFalcon/elasticsearch-analysis-hanlp)
 
 此分词器基于[HanLP](http://www.hankcs.com/nlp)，提供了HanLP中大部分的分词方式。
 
-今年一年都在忙其他事，所以插件更新基本一年没有更新，年底更新一波。今年学习了一下ES向量插件（亚马逊设计的那个方式还挺有意思的，重新设计向量索引文件，但文件管理依托于lucene），搞了搞知识图谱（JanusGraph），最近又在弄ES存储计算分离（基于共享存储）
-
-🚩 更新日志：
-1. 适配Elasticsearch 7.5.1~7.10.2版本，更新HanLP版本至1.7.8，更新日志这次就不在每个release上加了，直接看README（7.5.1重新打包订正）(陆续上传中)
-2. 修改分词流程，完全采用hankcs提供的hanlp-lucene-plugin进行，详见方法com.hankcs.lucene.
-   SegmentWrapper#next，该类部分代码格式虽然不太优雅，但为了保证和源码基本一致性，代码格式校验做了剔除该文件，请各位改动该文件时，尽量不对该文件进行格式改动
-3. 修改模型引用方式，模型使用了简单的单例方式引用，防止重复加载，内存溢出
-4. 修复自定义停用词词典未加载问题
-5. 分词过程中默认会将空白字符剔除，如果有需要空白字符的场景，请自行更改源码重新编译打包
-6. 优化部分代码结构，修复部分代码逻辑错误问题
-7. 工程改为gradle方式部署，重新修改打包请使用`./gradlew assemble`命令，否则可能因本地gradle版本不匹配导致问题
-8. github release增加MD5校验，若发现MD5值和release包计算得出的不一致，请勿使用，网盘会一直放在那。
-9. 部分版本因为工作原因可能无法及时更新，请自行打包（一般ES小版本迭代不会有大的改动，只需要更改版本号即可，版本号在gradle.properties中修改）
-10. 6.x分支是我重新用gradle配置的一个分支，可能和原来的maven版本不一致，请大家谅解（进行中）
-11. 单测的话，因为分词用到了自定义配置的东西，ES自己的test framework对这个配置加载有些问题，所以目前单测是没有的，大部分测试都是我自己直接部署进行测试的，后续会将测试点和测试项列出来供大家参考
-12. 目前来说，应该Elasticsearch开源协议更换对该插件无影响，后续未知~~（毕竟插件小众，且非云上提供）
-13. 在7.6.0版本后复原增加crf分词方式，不再采用CRFSegment，而是采用CRFLexicalAnalyzer进行分词，模型使用类似NLP方式采用单例实现
-14. 在7.6.0版本后，ES在启动时增加了analyzer校验，所以若没有配置NLP或CRF模型，则启动插件时就不会加载，若要使用两种分词方式，需要添加模型后重启ES
-15. 若要使用NLP或CRF分词方式，则配置文件hanlp.properties中模型路径配置中的文件名必须和实际名称一致（bin or txt），目前默认配置为data-for-1.7.5.zip（该数据包可在HanLP项目中下载）中的模型路径
-16. 分支结构重新规范，目前提供更新维护的主要是master、7.x、6.x分支，5.x和2.x因个人精力有限不频繁做更新迭代
-
-最后还是要说，开源不易，有空还是会跟进改动
-
-----------
-
-版本对应
-----------
-
-| Plugin version | Branch version  |
-| :------------- | :-------------- |
-| 7.x            | 7.x             |
-| 6.x            | 6.x             |
+KennFalcon: 开源不易，有空还是会跟进改动。
 
 安装步骤
 ----------
 
-### 1. 下载安装ES对应Plugin Release版本
+### 1. 下载安装Opensearch对应Plugin Release版本
 
 安装方式：
 
 方式一
 
-a. 下载对应的release安装包，最新release包可从baidu盘下载（链接:https://pan.baidu.com/s/1mFPNJXgiTPzZeqEjH_zifw  密码:i0o7）
+a. 下载对应的release安装包
 
 b. 执行如下命令安装，其中PATH为插件包绝对路径：
 
-`./bin/elasticsearch-plugin install file://${PATH}`
+`./bin/opensearch-plugin install file://${PATH}`
 
 方式二
 
-a. 使用elasticsearch插件脚本安装command如下：
+a. 使用opensearch插件脚本安装，command如下：
 
-`./bin/elasticsearch-plugin install https://github.com/KennFalcon/elasticsearch-analysis-hanlp/releases/download/v6.5.4/elasticsearch-analysis-hanlp-6.5.4.zip`
+`./bin/opensearch-plugin install https://github.com/Anytinz/opensearch-analysis-hanlp/releases/download/v2.6.0/opensearch-analysis-hanlp-2.6.0.zip`
 
 ### 2. 安装数据包
 
 release包中存放的为HanLP源码中默认的分词数据，若要下载完整版数据包，请查看[HanLP Release](https://github.com/hankcs/HanLP/releases)。
 
-数据包目录：*ES_HOME*/plugins/analysis-hanlp
+数据包目录：*OPENSEARCH_HOME*/plugins/analysis-hanlp
 
 **注：因原版数据包自定义词典部分文件名为中文，这里的hanlp.properties中已修改为英文，请对应修改文件名**
 
-### 3. 重启Elasticsearch
+### 3. 重启Opensearch
 
-**注：上述说明中的ES_HOME为自己的ES安装路径，需要绝对路径**
+**注：上述说明中的OPENSEARCH_HOME为自己的Opensearch安装路径，需要绝对路径**
 
 ### 4. 热更新
 
 在本版本中，增加了词典热更新，修改步骤如下：
 
-a. 在*ES_HOME*/plugins/analysis-hanlp/data/dictionary/custom目录中新增自定义词典
+a. 在*OPENSEARCH_HOME*/plugins/analysis-hanlp/data/dictionary/custom目录中新增自定义词典
 
 b. 修改hanlp.properties，修改CustomDictionaryPath，增加自定义词典配置
 
@@ -168,7 +137,7 @@ POST http://localhost:9200/twitter2/_analyze
 远程词典配置
 ----------
 
-配置文件为*ES_HOME*/config/analysis-hanlp/hanlp-remote.xml
+配置文件为*OPENSEARCH_HOME*/config/analysis-hanlp/hanlp-remote.xml
 
 ```xml
 <properties>
@@ -218,7 +187,7 @@ POST http://localhost:9200/twitter2/_analyze
 
 HanLP在提供了各类分词方式的基础上，也提供了一系列的分词配置，分词插件也提供了相关的分词配置，我们可以在通过如下配置来自定义自己的分词器：
 
-| Config                               | Elastic version     |
+| Config                               | Opensearch version  |
 | :----------------------------------- | :------------------ |
 | enable_custom_config                 | 是否开启自定义配置    |
 | enable_index_mode                    | 是否是索引分词        |
