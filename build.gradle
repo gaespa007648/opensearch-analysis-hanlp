@@ -10,7 +10,7 @@ buildscript {
 }
 
 group = 'org.opensearch'
-version = "$opensearchVersion"
+version = '1.0.0'
 description = 'opensearch-analysis-hanlp'
 
 apply plugin: 'java'
@@ -39,8 +39,8 @@ sourcesJar {
 
 assemble {
     doLast {
-        file("build/distributions/analysis-hanlp-${opensearchVersion}.zip").renameTo(file("build/distributions/${rootProject.name}-${opensearchVersion}.zip"))
-        ant.checksum file: "build/distributions/${rootProject.name}-${opensearchVersion}.zip"
+        file("build/distributions/analysis-hanlp-${version}.zip").renameTo(file("build/distributions/${rootProject.name}-${version}-${opensearchVersion}.zip"))
+        ant.checksum file: "build/distributions/${rootProject.name}-${version}-${opensearchVersion}.zip"
     }
 }
 

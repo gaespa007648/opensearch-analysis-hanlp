@@ -29,7 +29,7 @@ b. 执行如下命令安装，其中PATH为插件包绝对路径：
 
 a. 使用opensearch插件脚本安装，command如下：
 
-`./bin/opensearch-plugin install https://github.com/Anytinz/opensearch-analysis-hanlp/releases/download/v2.6.0/opensearch-analysis-hanlp-2.6.0.zip`
+`./bin/opensearch-plugin install https://github.com/Anytinz/opensearch-analysis-hanlp/releases/download/v1.0.0/opensearch-analysis-hanlp-1.0.0-2.6.0.zip`
 
 ### 2. 安装数据包
 
