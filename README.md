@@ -26,10 +26,14 @@ KennFalcon: 开源不易，有空还是会跟进改动。
 這邊提供本地端更新docker建立的Opensearch plugin的流程, 此打包檔案是用來在opensearch新增tokenizer "hanlp"。
 
 1. 複製檔案到docker-node:
+
    docker cp build/distributions/opensearch-analysis-hanlp-1.0.0-2.17.0.zip opensearch-node1:/tmp/
+
    請將上述zip檔案和docker-node的名稱換成自己環境下的名稱。
 2. 進入指定的docker-node安裝plugin:
+
    docker exec -it opensearch-node1 /bin/bash
+
    ./bin/opensearch-plugin install file:///tmp/opensearch-analysis-hanlp-1.0.0-2.17.0.zip
 
 ## 更新版本
@@ -39,16 +43,24 @@ KennFalcon: 开源不易，有空还是会跟进改动。
 ### 安裝環境
 
 1. 安裝sdkman: 你可以參考[官方安裝](https://sdkman.io/install/)或直接執行以下指令
+
    [安裝]
+
    curl -s "https://get.sdkman.io" | bash
+
    source "$HOME/.sdkman/bin/sdkman-init.sh"
 
    [測試]
+
    在終端機裡面測試以下指令是否成功
+
    sdk version
 2. 安裝gradle: 使用sdkman安裝gradle
+
    [安裝]
+
    sdk install gradle 8.10.2
+
    sdk use gradle 8.10.2
 
    [測試]
@@ -81,6 +93,7 @@ Q: 如果打包失敗的話怎麼辦？
 首先要先找出打包失敗的原因, 目前的經驗會是有以下可能性
 
 1. gradle版本過舊, 需要參考Opensearch的gradle-wrapper的指定版本進行更新
+
    在我們的build.gradle當中, 可以看到我們會使用opensearch對應的build-tools來進行打包
 
    ```
@@ -97,21 +110,25 @@ Q: 如果打包失敗的話怎麼辦？
    ```
 
    需要debug的內容是要先檢查build-tool {opensearchVersion}對應的gradle版本, 這部分可以上github查看gradle wrapper。
+
    以下以2.17.0為例, 查看[opensearch-project/OpenSearch/gradle/wrapper](https://github.com/opensearch-project/OpenSearch/blob/2.17.0/gradle/wrapper/gradle-wrapper.properties)後發現distributionUrl裡面指定8.10的gradle版本。
 
    再來需要檢查repositories, 這個是抓套件的來源路徑, 需要確保相關套件皆可以在指定的repositories找到。前版2.6.0便缺少了gradlePluginPortal的路徑所以會有部分的套件找不到安裝來源。
 2. 使用到deprecated的套件
+
    在此次升版的過程中, 有發現舊版本部分的套件在新版的bool-tool已經不支援。例如以下套件:
+
    import org.opensearch.core.internal.io.IOUtils;
+
    在後續版本中已不支援, 需全部替換成
+
    import org.opensearch.common.util.io.IOUtils;
 
    以上的訊息可在gradle build時加上-info的參數, 便可以印出來在打包時哪個流程會失敗來進行debug。
+
    gradle build -v
 
 ---
-
-
 
 安装步骤
 --------
